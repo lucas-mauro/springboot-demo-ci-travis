@@ -1,0 +1,12 @@
+language: java
+branches:
+  only:
+    - main
+notifications:
+  email:
+    recipients:
+      - lucasmaurogil@gmail.com
+install:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+  - mvn verify
