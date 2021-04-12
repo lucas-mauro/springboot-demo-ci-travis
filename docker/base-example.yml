@@ -1,0 +1,37 @@
+version: "3.7"
+
+networks:
+  ipnet:
+
+services:
+  postgres:
+    networks:
+      ipnet:
+        aliases:
+          - postgres
+    image: postgres:12.1-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres-basic
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "5432:5432"
+  flyway:
+    networks:
+      ipnet:
+        aliases:
+          - flyway
+    build:
+      context: ./flyway
+    image: flyway:postgres-basic
+    command: -connectRetries=20 -url=jdbc:postgresql://postgres:5432/postgres-basic -user=postgres -password=postgres -schemas=example_schema -outOfOrder=true -validateOnMigrate=false -locations=filesystem:. migrate
+    deploy:
+      mode: replicated
+      replicas: 1
+    depends_on:
+      - "postgres"
+volumes:
+  dev-webserver-data:
+  dev-storage-data:
