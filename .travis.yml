@@ -2,6 +2,7 @@ language: java
 branches:
   only:
     - main
+    - "/^MM-\d"
 notifications:
   email:
     recipients:
